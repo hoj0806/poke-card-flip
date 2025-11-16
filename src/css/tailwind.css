@@ -1,6 +1,11 @@
 @import "tailwindcss";
 
+@base {
+  font-family: "Galmuri11", sans-serif;
+}
+
 @theme {
   --bg-color-primary: rgb(255, 126, 95);
   --bg-color-secondary: rgb(254, 180, 123);
+  --font-default: "Galmuri9", sans-serif;
 }
