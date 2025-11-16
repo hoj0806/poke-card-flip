@@ -9,6 +9,6 @@ export default defineConfig({
         plugins: [["babel-plugin-react-compiler"]],
       },
     }),
-    tailwindcss(), // ⬅️ 여기!
+    tailwindcss(),
   ],
 });
