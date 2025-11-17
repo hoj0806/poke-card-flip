@@ -1,8 +1,8 @@
-import { useLoaderData } from "react-router";
 import PokedexList from "./PokedexList";
+import { usePokemonStore } from "../../store/pokemonStore";
 
 export default function PokedexGrid() {
-  const pokemons = useLoaderData();
+  const pokemons = usePokemonStore((state) => state.pokemons);
 
   return (
     <>
