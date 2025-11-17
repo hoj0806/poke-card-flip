@@ -18,6 +18,7 @@ const router = createBrowserRouter([
       {
         path: "/pokedex",
         Component: Pokedex,
+        loader: pokemonLoader,
       },
       {
         path: "/selectDifficulty",
