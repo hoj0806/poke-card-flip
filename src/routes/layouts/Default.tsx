@@ -4,7 +4,7 @@ import Footer from "../../components/Common/Footer/Footer";
 
 export default function Default() {
   return (
-    <div className='bg-linear-to-r from-(--bg-color-primary) to-(--bg-color-secondary) font-default flex flex-col h-screen'>
+    <div className='bg-linear-to-r from-(--bg-color-primary) to-(--bg-color-secondary) font-default flex flex-col h-screen relative'>
       <Header />
       <Outlet />
       <Footer />
