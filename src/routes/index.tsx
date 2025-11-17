@@ -2,6 +2,7 @@ import { createBrowserRouter, RouterProvider } from "react-router";
 import Home from "./Home";
 import Pokedex from "./pages/Pokedex/Pokedex";
 import Default from "./layouts/Default";
+import SelectDifficulty from "./pages/SelectDifficulty/SelectDifficulty";
 
 const router = createBrowserRouter([
   {
@@ -14,6 +15,10 @@ const router = createBrowserRouter([
       {
         path: "/pokedex",
         Component: Pokedex,
+      },
+      {
+        path: "/selectDifficulty",
+        Component: SelectDifficulty,
       },
     ],
   },
