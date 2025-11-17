@@ -5,6 +5,7 @@ import Default from "./layouts/Default";
 import SelectDifficulty from "./pages/SelectDifficulty/SelectDifficulty";
 import Game from "./pages/Game/Game";
 import GameDefault from "./layouts/GameDefault";
+import { pokemonLoader } from "./loader/PokemonLoader";
 
 const router = createBrowserRouter([
   {
@@ -33,6 +34,7 @@ const router = createBrowserRouter([
           {
             path: ":difficulty",
             Component: Game,
+            loader: pokemonLoader,
           },
         ],
       },
