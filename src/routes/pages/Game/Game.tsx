@@ -1,22 +1,11 @@
-import { useEffect } from "react";
-import { useParams } from "react-router";
-
-import { usePokemonStore } from "../../../store/pokemonStore";
+import { useLoaderData, useParams } from "react-router";
 
 export default function Game() {
   const { difficulty } = useParams();
+  const pokemons = useLoaderData();
 
-  const pokemon = usePokemonStore((state) => state.pokemons);
-  const fetchPokemonData = usePokemonStore((state) => state.fetchPokemonData);
-
-  useEffect(() => {
-    fetchPokemonData();
-  }, [fetchPokemonData]);
-
-  console.log(pokemon);
   return (
     <>
-      <h1>Game Component</h1>
       <h2>{difficulty}</h2>
     </>
   );
