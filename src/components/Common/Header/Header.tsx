@@ -1,7 +1,15 @@
+import NavigationButton from "./NavigationButton";
+
 export default function Header() {
   return (
-    <header className='bg-yellow-200'>
-      <h1>안녕하세요</h1>
-    </header>
+    <nav className='bg-yellow-200'>
+      <ul className='flex justify-around my-3'>
+        <NavigationButton />
+        <NavigationButton />
+        <NavigationButton />
+        <NavigationButton />
+        <NavigationButton />
+      </ul>
+    </nav>
   );
 }
