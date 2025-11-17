@@ -5,6 +5,5 @@ export const pokemonLoader = async () => {
 
   await fetchPokemonData();
 
-  const pokemons = usePokemonStore.getState().pokemons;
-  return pokemons;
+  return null;
 };
