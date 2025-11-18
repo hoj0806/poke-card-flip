@@ -7,6 +7,9 @@ export default function PokedexDetail() {
   const pokemons = usePokemonStore((state) => state.pokemons);
 
   const pokemon = pokemons.find((p) => p.id === Number(id));
+  const toggleBookmark = usePokemonStore(
+    (state) => state.toggleBookMarkPokemon
+  );
 
   if (!pokemon) return null;
 
@@ -33,7 +36,12 @@ export default function PokedexDetail() {
           className='w-40 h-40 mx-auto mb-4'
           alt={pokemon.name}
         />
-
+        <button
+          className='bg-amber-400'
+          onClick={() => toggleBookmark(pokemon.id)}
+        >
+          {pokemon.bookmark === true ? "북마크 제거" : "북마크 추가"}
+        </button>
         <p>키: {pokemon.height}</p>
         <p>몸무게: {pokemon.weight}</p>
         <p>타입: {pokemon.types.join(", ")}</p>

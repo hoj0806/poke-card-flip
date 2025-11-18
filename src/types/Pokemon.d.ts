@@ -33,4 +33,5 @@ interface PokemonData {
   weight: number;
   types: string[];
   abilities: string[];
+  bookmark: boolean;
 }

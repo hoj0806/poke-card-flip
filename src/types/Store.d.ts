@@ -8,4 +8,5 @@ interface PokemonStore {
   sortBy: "none" | "id" | "name" | "type";
   sortToggle: (key: "id" | "name" | "type") => void;
   sortReset: () => void;
+  toggleBookMarkPokemon: (id: number) => void;
 }
