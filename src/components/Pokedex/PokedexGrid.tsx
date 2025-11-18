@@ -1,4 +1,3 @@
-// PokedexGrid.tsx
 import { usePokemonStore } from "../../store/pokemonStore";
 import PokedexList from "./PokedexList";
 

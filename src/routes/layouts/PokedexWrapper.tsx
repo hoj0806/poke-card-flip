@@ -1,4 +1,3 @@
-// PokedexWrapper.tsx
 import { useState } from "react";
 import PokedexGrid from "../../components/Pokedex/PokedexGrid";
 import PokedexButtonBox from "../../components/Pokedex/PokedexButtonBox";
