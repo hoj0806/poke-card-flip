@@ -1,6 +1,8 @@
-export default function PokedexList({ name, image }: PokemonData) {
+import { Link } from "react-router";
+
+export default function PokedexList({ name, image, id }: PokemonData) {
   return (
-    <>
+    <Link to={`/pokedex/${id}`}>
       <li className='cursor-pointer'>
         <div className='relative flex items-center justify-center rounded-full md:w-[120px] md:h-[120px] border-[3px] border-white/30 bg-transparent shadow-2xl overflow-hidden'>
           <div className='absolute inset-0 rounded-full bg-gradient-radial from-white/50 to-transparent opacity-60'></div>
@@ -15,6 +17,6 @@ export default function PokedexList({ name, image }: PokemonData) {
         </div>
         <p className='text-sm md:text-lg text-center mt-2'>{name}</p>
       </li>
-    </>
+    </Link>
   );
 }
