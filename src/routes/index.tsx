@@ -1,31 +1,38 @@
 import { createBrowserRouter, Navigate, RouterProvider } from "react-router";
 import Home from "./Home";
-import Pokedex from "./pages/Pokedex/Pokedex";
 import Default from "./layouts/Default";
 import SelectDifficulty from "./pages/SelectDifficulty/SelectDifficulty";
 import Game from "./pages/Game/Game";
 import GameDefault from "./layouts/GameDefault";
 import { pokemonLoader } from "./loader/PokemonLoader";
+import PokedexDetail from "./pages/PokedexDetail/PokedexDetail";
+import PokedexWrapper from "./layouts/PokedexWrapper";
 
 const router = createBrowserRouter([
   {
     Component: Default,
+    loader: pokemonLoader,
     children: [
       {
         path: "",
         Component: Home,
       },
       {
-        path: "/pokedex",
-        Component: Pokedex,
-        loader: pokemonLoader,
+        path: "pokedex",
+        Component: PokedexWrapper,
+        children: [
+          {
+            path: ":id",
+            Component: PokedexDetail,
+          },
+        ],
       },
       {
-        path: "/selectDifficulty",
+        path: "selectDifficulty",
         Component: SelectDifficulty,
       },
       {
-        path: "/game",
+        path: "game",
         Component: GameDefault,
         children: [
           {
@@ -35,7 +42,6 @@ const router = createBrowserRouter([
           {
             path: ":difficulty",
             Component: Game,
-            loader: pokemonLoader,
           },
         ],
       },

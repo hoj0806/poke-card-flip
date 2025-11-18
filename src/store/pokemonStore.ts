@@ -3,19 +3,6 @@ import { immer } from "zustand/middleware/immer";
 import { axiosInstance } from "../api/axios";
 import axios from "axios";
 
-type Sort = "asc" | "desc";
-
-interface PokemonStore {
-  pokemons: PokemonData[];
-  fetchPokemonData: () => Promise<void>;
-  sortById: Sort;
-  sortByName: Sort;
-  sortByType: Sort;
-  sortBy: "none" | "id" | "name" | "type";
-  sortToggle: (key: "id" | "name" | "type") => void;
-  sortReset: () => void;
-}
-
 export const usePokemonStore = create(
   immer<PokemonStore>((set, get) => ({
     pokemons: [],
