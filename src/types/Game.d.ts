@@ -4,4 +4,5 @@ interface PokemonCard {
   isCorrect: boolean;
   isFlied: boolean;
   type: string;
+  image: string;
 }
