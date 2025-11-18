@@ -20,7 +20,7 @@ export default function PokedexDetail() {
     >
       <div
         className='bg-white p-6 rounded-xl shadow-xl w-[400px]'
-        onClick={(e) => e.stopPropagation()} // 모달 안 클릭 시 닫히지 않도록
+        onClick={(e) => e.stopPropagation()}
       >
         <button
           className='absolute top-4 right-4 text-gray-600'

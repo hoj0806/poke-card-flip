@@ -1,4 +1,3 @@
-// PokedexButtonBox.tsx
 import { usePokemonStore } from "../../store/pokemonStore";
 import PokedexSortButton from "./PokedexSortButton";
 
