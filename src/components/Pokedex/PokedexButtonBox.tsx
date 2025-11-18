@@ -1,7 +1,16 @@
+// PokedexButtonBox.tsx
 import { usePokemonStore } from "../../store/pokemonStore";
 import PokedexSortButton from "./PokedexSortButton";
 
-export default function PokedexButtonBox() {
+interface PokedexButtonBoxProps {
+  showBookmarks: boolean;
+  setShowBookmarks: (value: boolean) => void;
+}
+
+export default function PokedexButtonBox({
+  showBookmarks,
+  setShowBookmarks,
+}: PokedexButtonBoxProps) {
   const sortById = usePokemonStore((s) => s.sortById);
   const sortByName = usePokemonStore((s) => s.sortByName);
   const sortByType = usePokemonStore((s) => s.sortByType);
@@ -33,6 +42,13 @@ export default function PokedexButtonBox() {
       </PokedexSortButton>
 
       <PokedexSortButton onClick={sortReset}>리셋</PokedexSortButton>
+
+      <PokedexSortButton
+        onClick={() => setShowBookmarks(!showBookmarks)}
+        selected={showBookmarks}
+      >
+        {showBookmarks ? "북마크 보기 중" : "북마크만 보기"}
+      </PokedexSortButton>
     </div>
   );
 }

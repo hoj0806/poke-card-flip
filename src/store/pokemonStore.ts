@@ -11,6 +11,14 @@ export const usePokemonStore = create(
     sortByType: "asc",
     sortBy: "none",
 
+    toggleBookMarkPokemon: (id: number) => {
+      set((state) => {
+        const pokemon = state.pokemons.find((p) => p.id === id);
+        if (pokemon) {
+          pokemon.bookmark = !pokemon.bookmark;
+        }
+      });
+    },
     fetchPokemonData: async () => {
       const pokemonPromises = Array.from({ length: 151 }, (_, i) => i + 1).map(
         async (id) => {
@@ -63,6 +71,7 @@ export const usePokemonStore = create(
             weight,
             types: koreanTypes,
             abilities: koreanAbilities,
+            bookmark: false,
           };
         }
       );
