@@ -5,6 +5,35 @@ import axios from "axios";
 
 export const usePokemonStore = create(
   immer<PokemonStore>((set, get) => ({
+    highScore: {
+      easy: [
+        { name: "테스트1", score: 3 },
+        { name: "테스트2", score: 2 },
+        { name: "테스트3", score: 1 },
+      ],
+      normal: [
+        { name: "테스트1", score: 3 },
+        { name: "테스트2", score: 2 },
+        { name: "테스트3", score: 1 },
+      ],
+      hard: [
+        { name: "테스트1", score: 3 },
+        { name: "테스트2", score: 2 },
+        { name: "테스트3", score: 1 },
+      ],
+    },
+    setHighScore: (
+      difficulty: "easy" | "normal" | "hard",
+      name: string,
+      score: number
+    ) => {
+      set((state) => {
+        const currentScores = state.highScore[difficulty];
+        const updatedScores = [...currentScores, { name, score }];
+        updatedScores.sort((a, b) => b.score - a.score);
+        state.highScore[difficulty] = updatedScores.slice(0, 3);
+      });
+    },
     pokemons: [],
     sortById: "asc",
     sortByName: "asc",
