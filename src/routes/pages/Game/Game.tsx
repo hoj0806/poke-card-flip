@@ -1,25 +1,26 @@
-import { useParams } from "react-router";
+import { Link, useParams } from "react-router";
 import { usePokemonStore } from "../../../store/pokemonStore";
 import { useState, useEffect } from "react";
 import Card from "../../../components/Game/Card";
+import ProgressBarTimer from "../../../components/Game/ProgressBarTimer";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface PokemonCard {
   id: string;
   name: string;
   image: string;
-  isFlied: boolean; // 뒤집힘 상태
-  isCorrect: boolean; // 맞춘 카드 여부
+  isFlied: boolean;
+  isCorrect: boolean;
 }
 
 export default function Game() {
   const { difficulty } = useParams();
   const pokemons = usePokemonStore((state) => state.pokemons);
 
-  // 카드 세팅
   const [pokemonCards, setPokemonCards] = useState<PokemonCard[]>(() => {
     if (!pokemons || pokemons.length === 0) return [];
 
-    let cardCount = 6; // easy
+    let cardCount = 6;
     if (difficulty === "normal") cardCount = 10;
     else if (difficulty === "hard") cardCount = 15;
 
@@ -27,51 +28,39 @@ export default function Game() {
       .sort(() => Math.random() - 0.5)
       .slice(0, cardCount);
 
-    const cards = selectedPokemons.flatMap((p) => [
-      {
-        id: `${p.id}-1`,
-        name: p.name,
-        image: p.image,
-        isFlied: true, // 최초 뒤집힘
-        isCorrect: false,
-      },
-      {
-        id: `${p.id}-2`,
-        name: p.name,
-        image: p.image,
-        isFlied: true, // 최초 뒤집힘
-        isCorrect: false,
-      },
-    ]);
-
-    return cards.sort(() => Math.random() - 0.5);
+    return selectedPokemons
+      .flatMap((p) => [
+        {
+          id: `${p.id}-1`,
+          name: p.name,
+          image: p.image,
+          isFlied: true,
+          isCorrect: false,
+        },
+        {
+          id: `${p.id}-2`,
+          name: p.name,
+          image: p.image,
+          isFlied: true,
+          isCorrect: false,
+        },
+      ])
+      .sort(() => Math.random() - 0.5);
   });
 
-  // 뒤집힌 카드 추적
   const [flippedCards, setFlippedCards] = useState<PokemonCard[]>([]);
-
-  // 게임 종료 상태
   const [isGameOver, setIsGameOver] = useState(false);
 
   const handleFlip = (card: PokemonCard) => {
-    // 게임 종료시 막기
-    if (isGameOver) return;
-    // 이미 2개 뒤집혀 있으면 막기
-    if (flippedCards.length >= 2) return;
-
-    // 이미 앞면이거나 맞춘 카드면 막기
+    if (isGameOver || flippedCards.length >= 2) return;
     if (!card.isFlied || card.isCorrect) return;
 
-    // 카드 뒤집기
     setPokemonCards((prev) =>
       prev.map((c) => (c.id === card.id ? { ...c, isFlied: false } : c))
     );
-
-    // flippedCards에 추가
     setFlippedCards((prev) => [...prev, { ...card, isFlied: false }]);
   };
 
-  // 뒤집힌 카드가 2장 되면 비교
   useEffect(() => {
     if (flippedCards.length === 2) {
       const [first, second] = flippedCards;
@@ -80,33 +69,32 @@ export default function Game() {
         setPokemonCards((prev) => {
           const updated = prev.map((c) => {
             if (c.id === first.id || c.id === second.id) {
-              if (first.name === second.name) {
-                return { ...c, isCorrect: true };
-              } else {
-                return { ...c, isFlied: true };
-              }
+              if (first.name === second.name) return { ...c, isCorrect: true };
+              return { ...c, isFlied: true };
             }
             return c;
           });
 
-          // 🔥 모든 카드가 맞춰졌는지 검사
-          const remaining = updated.filter((c) => !c.isCorrect);
-          if (remaining.length === 0) {
-            setIsGameOver(false);
+          if (updated.filter((c) => !c.isCorrect).length === 0) {
+            setIsGameOver(true);
           }
 
           return updated;
         });
 
-        // flippedCards 초기화
         setFlippedCards([]);
       }, 500);
     }
   }, [flippedCards]);
 
   return (
-    <>
+    <div className='relative'>
       <h2 className='text-2xl font-bold mb-6 text-center'>{difficulty}</h2>
+      <ProgressBarTimer
+        duration={60}
+        onTimeout={() => setIsGameOver(true)}
+        isGameOver={isGameOver}
+      />
       <div className='grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-3 justify-items-center'>
         {pokemonCards.map((card) => (
           <Card
@@ -133,6 +121,30 @@ export default function Game() {
           />
         ))}
       </div>
-    </>
+      {/* 게임 오버 팝업 */}
+      <AnimatePresence>
+        {isGameOver && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className='fixed inset-0 bg-black/50 flex items-center justify-center z-50'
+          >
+            <motion.div
+              initial={{ scale: 0.8 }}
+              animate={{ scale: 1 }}
+              exit={{ scale: 0.8 }}
+              className='bg-white rounded-lg p-8 text-center shadow-lg'
+            >
+              <h2 className='text-2xl font-bold mb-4'>게임 종료!</h2>
+              <p className='mb-4'>
+                모든 카드를 맞췄거나 시간이 종료되었습니다.
+              </p>
+              <Link to='/'>메인으로</Link>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
   );
 }
