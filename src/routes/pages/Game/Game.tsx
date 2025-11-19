@@ -15,6 +15,7 @@ export default function Game() {
   const { difficulty } = useParams();
   const pokemons = usePokemonStore((state) => state.pokemons);
 
+  // 카드 세팅
   const [pokemonCards, setPokemonCards] = useState<PokemonCard[]>(() => {
     if (!pokemons || pokemons.length === 0) return [];
 
@@ -49,7 +50,12 @@ export default function Game() {
   // 뒤집힌 카드 추적
   const [flippedCards, setFlippedCards] = useState<PokemonCard[]>([]);
 
+  // 게임 종료 상태
+  const [isGameOver, setIsGameOver] = useState(false);
+
   const handleFlip = (card: PokemonCard) => {
+    // 게임 종료시 막기
+    if (isGameOver) return;
     // 이미 2개 뒤집혀 있으면 막기
     if (flippedCards.length >= 2) return;
 
@@ -71,8 +77,8 @@ export default function Game() {
       const [first, second] = flippedCards;
 
       setTimeout(() => {
-        setPokemonCards((prev) =>
-          prev.map((c) => {
+        setPokemonCards((prev) => {
+          const updated = prev.map((c) => {
             if (c.id === first.id || c.id === second.id) {
               if (first.name === second.name) {
                 return { ...c, isCorrect: true };
@@ -81,10 +87,18 @@ export default function Game() {
               }
             }
             return c;
-          })
-        );
+          });
 
-        // 비교 후 flippedCards 초기화
+          // 🔥 모든 카드가 맞춰졌는지 검사
+          const remaining = updated.filter((c) => !c.isCorrect);
+          if (remaining.length === 0) {
+            setIsGameOver(false);
+          }
+
+          return updated;
+        });
+
+        // flippedCards 초기화
         setFlippedCards([]);
       }, 500);
     }
