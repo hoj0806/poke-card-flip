@@ -1,6 +1,6 @@
 import { Link, useParams } from "react-router";
 import { usePokemonStore } from "../../../store/pokemonStore";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Card from "../../../components/Game/Card";
 import ProgressBarTimer from "../../../components/Game/ProgressBarTimer";
 import { motion, AnimatePresence } from "framer-motion";
@@ -35,19 +35,31 @@ export default function Game() {
           id: `${p.id}-1`,
           name: p.name,
           image: p.image,
-          isFlied: true,
+          isFlied: false,
           isCorrect: false,
         },
         {
           id: `${p.id}-2`,
           name: p.name,
           image: p.image,
-          isFlied: true,
+          isFlied: false,
           isCorrect: false,
         },
       ])
       .sort(() => Math.random() - 0.5);
   });
+
+  useEffect(() => {
+    if (pokemonCards.length === 0) return;
+
+    const timer = setTimeout(() => {
+      setPokemonCards((prev) =>
+        prev.map((card) => ({ ...card, isFlied: true }))
+      );
+    }, 2000);
+
+    return () => clearTimeout(timer); // cleanup
+  }, [pokemonCards]);
 
   const [flippedCards, setFlippedCards] = useState<PokemonCard[]>([]);
   const [isGameOver, setIsGameOver] = useState(false);
