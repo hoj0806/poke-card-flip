@@ -1,6 +1,6 @@
 import { Link, useParams } from "react-router";
 import { usePokemonStore } from "../../../store/pokemonStore";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Card from "../../../components/Game/Card";
 import ProgressBarTimer from "../../../components/Game/ProgressBarTimer";
 import { motion, AnimatePresence } from "framer-motion";
@@ -50,51 +50,74 @@ export default function Game() {
 
   const [flippedCards, setFlippedCards] = useState<PokemonCard[]>([]);
   const [isGameOver, setIsGameOver] = useState(false);
+  const [score, setScore] = useState(0);
+  const [combo, setCombo] = useState(0);
 
   const handleFlip = (card: PokemonCard) => {
     if (isGameOver || flippedCards.length >= 2) return;
     if (!card.isFlied || card.isCorrect) return;
 
-    setPokemonCards((prev) =>
-      prev.map((c) => (c.id === card.id ? { ...c, isFlied: false } : c))
+    // 카드 뒤집기
+    const updatedCards = pokemonCards.map((c) =>
+      c.id === card.id ? { ...c, isFlied: false } : c
     );
-    setFlippedCards((prev) => [...prev, { ...card, isFlied: false }]);
-  };
+    setPokemonCards(updatedCards);
 
-  useEffect(() => {
-    if (flippedCards.length === 2) {
-      const [first, second] = flippedCards;
+    // 뒤집힌 카드 추적
+    const newFlipped = [...flippedCards, { ...card, isFlied: false }];
+
+    if (newFlipped.length === 2) {
+      const [first, second] = newFlipped;
 
       setTimeout(() => {
-        setPokemonCards((prev) => {
-          const updated = prev.map((c) => {
+        const isMatch = first.name === second.name;
+
+        // 카드 상태 업데이트
+        setPokemonCards((prev) =>
+          prev.map((c) => {
             if (c.id === first.id || c.id === second.id) {
-              if (first.name === second.name) return { ...c, isCorrect: true };
-              return { ...c, isFlied: true };
+              return isMatch
+                ? { ...c, isCorrect: true }
+                : { ...c, isFlied: true };
             }
             return c;
-          });
+          })
+        );
 
-          if (updated.filter((c) => !c.isCorrect).length === 0) {
-            setIsGameOver(true);
-          }
+        // 콤보 및 스코어
+        if (isMatch) {
+          const newCombo = combo + 1;
+          setCombo(newCombo);
+          setScore((prevScore) => prevScore + newCombo);
+        } else {
+          setCombo(0);
+        }
 
-          return updated;
-        });
+        // 게임 종료 체크
+        const allCorrect = pokemonCards.every((c) =>
+          c.isCorrect || c.id === first.id || c.id === second.id
+            ? isMatch
+            : c.isCorrect
+        );
+        if (allCorrect) setIsGameOver(true);
 
         setFlippedCards([]);
       }, 500);
+    } else {
+      setFlippedCards(newFlipped);
     }
-  }, [flippedCards]);
+  };
 
   return (
     <div className='relative'>
-      <h2 className='text-2xl font-bold mb-6 text-center'>{difficulty}</h2>
+      <p>Score : {score}</p>
+      <p>Combo : {combo}</p>
       <ProgressBarTimer
         duration={60}
         onTimeout={() => setIsGameOver(true)}
         isGameOver={isGameOver}
       />
+
       <div className='grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-3 justify-items-center'>
         {pokemonCards.map((card) => (
           <Card
@@ -121,6 +144,7 @@ export default function Game() {
           />
         ))}
       </div>
+
       {/* 게임 오버 팝업 */}
       <AnimatePresence>
         {isGameOver && (
@@ -140,7 +164,9 @@ export default function Game() {
               <p className='mb-4'>
                 모든 카드를 맞췄거나 시간이 종료되었습니다.
               </p>
-              <Link to='/'>메인으로</Link>
+              <Link to='/' className='text-blue-500 underline'>
+                메인으로
+              </Link>
             </motion.div>
           </motion.div>
         )}
