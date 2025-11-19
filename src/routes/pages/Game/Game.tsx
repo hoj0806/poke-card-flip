@@ -16,7 +16,8 @@ interface PokemonCard {
 export default function Game() {
   const { difficulty } = useParams();
   const pokemons = usePokemonStore((state) => state.pokemons);
-
+  const [playerName, setPlayerName] = useState("");
+  const setHighScore = usePokemonStore((state) => state.setHighScore);
   const [pokemonCards, setPokemonCards] = useState<PokemonCard[]>(() => {
     if (!pokemons || pokemons.length === 0) return [];
 
@@ -146,6 +147,7 @@ export default function Game() {
       </div>
 
       {/* 게임 오버 팝업 */}
+      {/* 게임 오버 팝업 */}
       <AnimatePresence>
         {isGameOver && (
           <motion.div
@@ -164,7 +166,35 @@ export default function Game() {
               <p className='mb-4'>
                 모든 카드를 맞췄거나 시간이 종료되었습니다.
               </p>
-              <Link to='/' className='text-blue-500 underline'>
+
+              <div className='mb-4'>
+                <input
+                  type='text'
+                  placeholder='이름을 입력하세요'
+                  value={playerName}
+                  onChange={(e) => setPlayerName(e.target.value)}
+                  className='border border-gray-300 rounded px-2 py-1 w-full'
+                />
+              </div>
+
+              <button
+                onClick={() => {
+                  if (!playerName) return alert("이름을 입력해주세요!");
+                  if (difficulty) {
+                    setHighScore(
+                      difficulty as "easy" | "normal" | "hard",
+                      playerName,
+                      score
+                    );
+                  }
+                  // 팝업 닫거나 메인으로 이동
+                }}
+                className='bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600'
+              >
+                저장
+              </button>
+
+              <Link to='/' className='text-blue-500 underline ml-4'>
                 메인으로
               </Link>
             </motion.div>
