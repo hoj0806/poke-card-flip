@@ -6,7 +6,8 @@ import Game from "./pages/Game/Game";
 import GameDefault from "./layouts/GameDefault";
 import { pokemonLoader } from "./loader/PokemonLoader";
 import PokedexDetail from "./pages/PokedexDetail/PokedexDetail";
-import PokedexWrapper from "./layouts/PokedexWrapper";
+
+import Pokedex from "./pages/Pokedex/PokedexWrapper";
 
 const router = createBrowserRouter([
   {
@@ -19,7 +20,7 @@ const router = createBrowserRouter([
       },
       {
         path: "pokedex",
-        Component: PokedexWrapper,
+        Component: Pokedex,
         children: [
           {
             path: ":id",

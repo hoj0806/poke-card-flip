@@ -1,11 +1,6 @@
 import { usePokemonStore } from "../../store/pokemonStore";
 import PokedexSortButton from "./PokedexSortButton";
 
-interface PokedexButtonBoxProps {
-  showBookmarks: boolean;
-  setShowBookmarks: (value: boolean) => void;
-}
-
 export default function PokedexButtonBox({
   showBookmarks,
   setShowBookmarks,
