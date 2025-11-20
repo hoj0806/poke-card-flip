@@ -1,9 +1,13 @@
 import { usePokemonStore } from "../../store/pokemonStore";
 
 export const pokemonLoader = async () => {
-  const fetchPokemonData = usePokemonStore.getState().fetchPokemonData;
+  const store = usePokemonStore.getState();
 
-  await fetchPokemonData();
+  if (store.pokemons.length > 0) {
+    return null;
+  }
+
+  await store.fetchPokemonData();
 
   return null;
 };

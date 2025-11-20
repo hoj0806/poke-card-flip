@@ -52,7 +52,6 @@ export default function DarkModeToggle() {
       }`}
       onClick={handleToggle}
     >
-      {colorTheme}
       {/* 포켓볼 */}
       <motion.div
         className='absolute top-1/2 w-10 h-10 -translate-y-1/2 rounded-full border-2 border-gray-800 bg-white flex items-center justify-center'
