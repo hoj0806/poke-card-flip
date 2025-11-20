@@ -1,56 +1,63 @@
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
+import { persist } from "zustand/middleware";
 import { axiosInstance } from "../api/axios";
 import axios from "axios";
 
 export const usePokemonStore = create(
-  immer<PokemonStore>((set, get) => ({
-    highScore: {
-      easy: [
-        { name: "테스트1", score: 3 },
-        { name: "테스트2", score: 2 },
-        { name: "테스트3", score: 1 },
-      ],
-      normal: [
-        { name: "테스트1", score: 3 },
-        { name: "테스트2", score: 2 },
-        { name: "테스트3", score: 1 },
-      ],
-      hard: [
-        { name: "테스트1", score: 3 },
-        { name: "테스트2", score: 2 },
-        { name: "테스트3", score: 1 },
-      ],
-    },
-    setHighScore: (
-      difficulty: "easy" | "normal" | "hard",
-      name: string,
-      score: number
-    ) => {
-      set((state) => {
-        const currentScores = state.highScore[difficulty];
-        const updatedScores = [...currentScores, { name, score }];
-        updatedScores.sort((a, b) => b.score - a.score);
-        state.highScore[difficulty] = updatedScores.slice(0, 3);
-      });
-    },
-    pokemons: [],
-    sortById: "asc",
-    sortByName: "asc",
-    sortByType: "asc",
-    sortBy: "none",
+  persist(
+    immer<PokemonStore>((set, get) => ({
+      highScore: {
+        easy: [
+          { name: "테스트1", score: 3 },
+          { name: "테스트2", score: 2 },
+          { name: "테스트3", score: 1 },
+        ],
+        normal: [
+          { name: "테스트1", score: 3 },
+          { name: "테스트2", score: 2 },
+          { name: "테스트3", score: 1 },
+        ],
+        hard: [
+          { name: "테스트1", score: 3 },
+          { name: "테스트2", score: 2 },
+          { name: "테스트3", score: 1 },
+        ],
+      },
 
-    toggleBookMarkPokemon: (id: number) => {
-      set((state) => {
-        const pokemon = state.pokemons.find((p) => p.id === id);
-        if (pokemon) {
-          pokemon.bookmark = !pokemon.bookmark;
-        }
-      });
-    },
-    fetchPokemonData: async () => {
-      const pokemonPromises = Array.from({ length: 151 }, (_, i) => i + 1).map(
-        async (id) => {
+      setHighScore: (
+        difficulty: "easy" | "normal" | "hard",
+        name: string,
+        score: number
+      ) => {
+        set((state) => {
+          const currentScores = state.highScore[difficulty];
+          const updatedScores = [...currentScores, { name, score }];
+          updatedScores.sort((a, b) => b.score - a.score);
+          state.highScore[difficulty] = updatedScores.slice(0, 3);
+        });
+      },
+
+      pokemons: [],
+      sortById: "asc",
+      sortByName: "asc",
+      sortByType: "asc",
+      sortBy: "none",
+
+      toggleBookMarkPokemon: (id: number) => {
+        set((state) => {
+          const pokemon = state.pokemons.find((p) => p.id === id);
+          if (pokemon) {
+            pokemon.bookmark = !pokemon.bookmark;
+          }
+        });
+      },
+
+      fetchPokemonData: async () => {
+        const pokemonPromises = Array.from(
+          { length: 151 },
+          (_, i) => i + 1
+        ).map(async (id) => {
           const {
             data: {
               id: pokemonId,
@@ -72,10 +79,8 @@ export const usePokemonStore = create(
 
           const koreanTypes = await Promise.all(
             types.map(async (type: PokemonType) => {
-              const {
-                data: { names },
-              } = await axios.get(type.type.url);
-              return names.find(
+              const { data } = await axios.get(type.type.url);
+              return data.names.find(
                 (name: NameByLanguage) => name.language.name === "ko"
               )?.name;
             })
@@ -83,10 +88,8 @@ export const usePokemonStore = create(
 
           const koreanAbilities = await Promise.all(
             abilities.map(async (ability: PokemonAbility) => {
-              const {
-                data: { names },
-              } = await axios.get(ability.ability.url);
-              return names.find(
+              const { data } = await axios.get(ability.ability.url);
+              return data.names.find(
                 (name: NameByLanguage) => name.language.name === "ko"
               )?.name;
             })
@@ -102,81 +105,89 @@ export const usePokemonStore = create(
             abilities: koreanAbilities,
             bookmark: false,
           };
-        }
-      );
+        });
 
-      const results = await Promise.all(pokemonPromises);
-      set((state) => {
-        state.pokemons = results;
-      });
-    },
+        const results = await Promise.all(pokemonPromises);
 
-    sortToggle: (key) => {
-      const state = get();
-      let next: Sort;
+        set((state) => {
+          state.pokemons = results;
+        });
+      },
 
-      switch (key) {
-        case "id":
-          next = state.sortById === "asc" ? "desc" : "asc";
-          set((s) => {
-            s.pokemons.sort((a, b) =>
-              next === "asc" ? a.id - b.id : b.id - a.id
-            );
-            s.sortById = next;
-            s.sortBy = "id";
-          });
-          break;
+      sortToggle: (key) => {
+        const state = get();
+        let next: Sort;
 
-        case "name":
-          next = state.sortByName === "asc" ? "desc" : "asc";
-          set((s) => {
-            s.pokemons.sort((a, b) =>
-              next === "asc"
-                ? a.name.localeCompare(b.name, "ko")
-                : b.name.localeCompare(a.name, "ko")
-            );
-            s.sortByName = next;
-            s.sortBy = "name";
-          });
-          break;
-
-        case "type":
-          next = state.sortByType === "asc" ? "desc" : "asc";
-          set((s) => {
-            s.pokemons.sort((a, b) => {
-              const aType = a.types[0] || "";
-              const bType = b.types[0] || "";
-              if (aType === bType) return a.id - b.id;
-              return next === "asc"
-                ? aType.localeCompare(bType, "ko")
-                : bType.localeCompare(aType, "ko");
+        switch (key) {
+          case "id":
+            next = state.sortById === "asc" ? "desc" : "asc";
+            set((s) => {
+              s.pokemons.sort((a, b) =>
+                next === "asc" ? a.id - b.id : b.id - a.id
+              );
+              s.sortById = next;
+              s.sortBy = "id";
             });
-            s.sortByType = next;
-            s.sortBy = "type";
-          });
-          break;
-      }
-    },
+            break;
 
-    sortReset: () => {
-      const { sortById, sortByName, sortByType, sortBy } = get();
+          case "name":
+            next = state.sortByName === "asc" ? "desc" : "asc";
+            set((s) => {
+              s.pokemons.sort((a, b) =>
+                next === "asc"
+                  ? a.name.localeCompare(b.name, "ko")
+                  : b.name.localeCompare(a.name, "ko")
+              );
+              s.sortByName = next;
+              s.sortBy = "name";
+            });
+            break;
 
-      if (
-        sortBy === "none" &&
-        sortById === "asc" &&
-        sortByName === "asc" &&
-        sortByType === "asc"
-      ) {
-        return;
-      }
+          case "type":
+            next = state.sortByType === "asc" ? "desc" : "asc";
+            set((s) => {
+              s.pokemons.sort((a, b) => {
+                const aType = a.types[0] || "";
+                const bType = b.types[0] || "";
+                if (aType === bType) return a.id - b.id;
+                return next === "asc"
+                  ? aType.localeCompare(bType, "ko")
+                  : bType.localeCompare(aType, "ko");
+              });
+              s.sortByType = next;
+              s.sortBy = "type";
+            });
+            break;
+        }
+      },
 
-      set((s) => {
-        s.pokemons.sort((a, b) => a.id - b.id);
-        s.sortById = "asc";
-        s.sortByName = "asc";
-        s.sortByType = "asc";
-        s.sortBy = "none";
-      });
-    },
-  }))
+      sortReset: () => {
+        const { sortById, sortByName, sortByType, sortBy } = get();
+
+        if (
+          sortBy === "none" &&
+          sortById === "asc" &&
+          sortByName === "asc" &&
+          sortByType === "asc"
+        ) {
+          return;
+        }
+
+        set((s) => {
+          s.pokemons.sort((a, b) => a.id - b.id);
+          s.sortById = "asc";
+          s.sortByName = "asc";
+          s.sortByType = "asc";
+          s.sortBy = "none";
+        });
+      },
+    })),
+    {
+      name: "pokemon-store",
+      partialize: (state) => ({
+        highScore: state.highScore,
+        pokemons: state.pokemons,
+      }),
+    }
+  )
 );
