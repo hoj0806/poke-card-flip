@@ -5,7 +5,10 @@ import DarkModeToggle from "../../components/Common/ui/DarkModeToggle";
 
 export default function Default() {
   return (
-    <div className='bg-linear-to-r from-(--bg-color-primary) to-(--bg-color-secondary) font-default flex flex-col h-screen relative'>
+    <div
+      className='bg-linear-to-r from-(--bg-color-primary) to-(--bg-color-secondary) font-default flex flex-col h-screen relative  dark:from-gray-800 
+        dark:to-gray-600'
+    >
       <Header />
       <DarkModeToggle />
       <Outlet />

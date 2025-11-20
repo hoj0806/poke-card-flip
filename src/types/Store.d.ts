@@ -30,3 +30,7 @@ interface PokemonStore {
   sortToggle: (key: "id" | "name" | "type") => void;
   sortReset: () => void;
 }
+interface ColorThemeStore {
+  colorTheme: "light" | "dark" | "system"; // 가능한 테마 값 제한
+  updateColorTheme: (theme: "light" | "dark" | "system") => void;
+}
