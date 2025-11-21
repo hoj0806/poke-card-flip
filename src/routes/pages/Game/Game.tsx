@@ -5,14 +5,6 @@ import Card from "../../../components/Game/Card";
 import ProgressBarTimer from "../../../components/Game/ProgressBarTimer";
 import { motion, AnimatePresence } from "framer-motion";
 
-interface PokemonCard {
-  id: string;
-  name: string;
-  image: string;
-  isFlied: boolean;
-  isCorrect: boolean;
-}
-
 export default function Game() {
   const { difficulty } = useParams();
   const pokemons = usePokemonStore((state) => state.pokemons);
@@ -23,7 +15,7 @@ export default function Game() {
 
     let cardCount = 6;
     if (difficulty === "normal") cardCount = 10;
-    else if (difficulty === "hard") cardCount = 15;
+    else if (difficulty === "hard") cardCount = 14;
 
     const selectedPokemons = [...pokemons]
       .sort(() => Math.random() - 0.5)
@@ -37,6 +29,7 @@ export default function Game() {
           image: p.image,
           isFlied: false,
           isCorrect: false,
+          type: p.types[0],
         },
         {
           id: `${p.id}-2`,
@@ -44,6 +37,7 @@ export default function Game() {
           image: p.image,
           isFlied: false,
           isCorrect: false,
+          type: p.types[0],
         },
       ])
       .sort(() => Math.random() - 0.5);
@@ -130,35 +124,56 @@ export default function Game() {
         onTimeout={() => setIsGameOver(true)}
         isGameOver={isGameOver}
       />
-
-      <div className='grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-3 justify-items-center'>
+      <div
+        className={`
+    grid
+    justify-center 
+    w-[620px]
+    h-[620px]
+    mx-auto
+    my-auto
+    mt-14
+    gap-2
+    ${difficulty === "hard" ? "w-[870px] h-[660px]" : ""}
+    ${difficulty === "easy" ? "grid-cols-4" : ""}
+    ${difficulty === "normal" ? "grid-cols-5" : ""}
+    ${difficulty === "hard" ? "grid-cols-7" : ""}
+  `}
+      >
         {pokemonCards.map((card) => (
-          <Card
-            key={card.id}
-            size='w-28 h-36'
-            isFlied={card.isFlied}
-            isCorrect={card.isCorrect}
-            onFlip={() => handleFlip(card)}
-            frontContent={
-              <>
-                <img
-                  src={card.image}
-                  alt={card.name}
-                  className='w-16 h-16 object-contain'
-                />
-                <div className='mt-1 font-medium text-sm text-center'>
-                  {card.name}
+          <div key={card.id}>
+            <Card
+              pokemonType={card.type}
+              isFlied={card.isFlied}
+              isCorrect={card.isCorrect}
+              onFlip={() => handleFlip(card)}
+              frontContent={
+                <div className='flex flex-col items-center justify-center'>
+                  <img
+                    src={card.image}
+                    alt={card.name}
+                    className='object-contain'
+                  />
+                  <p className='text-[12px] md:text-sm lg:text-base text-center'>
+                    {card.name}
+                  </p>
                 </div>
-              </>
-            }
-            backContent={
-              <div className='bg-blue-500 w-full h-full rounded-lg' />
-            }
-          />
+              }
+              backContent={
+                <div
+                  className='w-full h-full rounded-lg'
+                  style={{
+                    backgroundImage: "url('/image/pokeball.png')",
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                  }}
+                />
+              }
+            />
+          </div>
         ))}
       </div>
 
-      {/* 게임 오버 팝업 */}
       {/* 게임 오버 팝업 */}
       <AnimatePresence>
         {isGameOver && (

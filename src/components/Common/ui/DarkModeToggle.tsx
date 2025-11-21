@@ -66,11 +66,9 @@ export default function DarkModeToggle() {
       </motion.div>
 
       {/* 아이콘 */}
-      <div className='absolute left-3 top-1/2 -translate-y-1/2 text-yellow-400'>
-        ☀️
-      </div>
+      <div className='absolute left-3 top-1/2 -translate-y-1/2 text-yellow-400'></div>
       <div className='absolute right-3 top-1/2 -translate-y-1/2 text-gray-300'>
-        🌙
+        {" "}
       </div>
     </div>
   );
