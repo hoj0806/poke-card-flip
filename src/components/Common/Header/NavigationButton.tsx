@@ -1,4 +1,4 @@
-import { Link } from "react-router";
+import { Link, NavLink } from "react-router";
 
 export default function NavigationButton({
   text,
@@ -8,10 +8,27 @@ export default function NavigationButton({
   linkTo: string;
 }) {
   return (
-    <>
-      <Link to={linkTo}>
-        <li className='bg-green-400 rounded-md text-2xl px-8 py-2'>{text}</li>
-      </Link>
-    </>
+    <NavLink
+      to={linkTo}
+      className={({ isActive }) =>
+        `
+        relative
+        text-2xl
+        rounded-sm
+        px-10 py-3
+        transform transition duration-100
+        cursor-pointer
+        list-none
+        ${
+          isActive
+            ? "bg-red-500 text-black"
+            : "bg-green-500 text-white hover:bg-green-600 hover:text-black"
+        }
+        
+      `
+      }
+    >
+      {text}
+    </NavLink>
   );
 }
