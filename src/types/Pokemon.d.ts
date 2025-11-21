@@ -10,7 +10,6 @@ interface Language {
   name: string;
   url: string;
 }
-
 interface NameByLanguage {
   language: Language;
   name: string;

@@ -1,19 +1,12 @@
 import { motion, useAnimation } from "framer-motion";
 import { useEffect } from "react";
 
-interface ProgressBarTimerProps {
-  duration?: number;
-  onTimeout?: () => void;
-  isGameOver?: boolean;
-}
-
 export default function ProgressBarTimer({
   duration = 60,
   onTimeout,
   isGameOver = false,
 }: ProgressBarTimerProps) {
   const controls = useAnimation();
-  console.log(isGameOver);
   useEffect(() => {
     if (!isGameOver) {
       controls
@@ -25,7 +18,6 @@ export default function ProgressBarTimer({
           onTimeout?.();
         });
     } else {
-      // 게임 오버면 애니메이션 멈춤
       controls.stop();
     }
   }, [isGameOver, controls, duration, onTimeout]);
