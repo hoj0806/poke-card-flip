@@ -25,13 +25,32 @@ interface PokemonAbility {
   slot: number;
 }
 
+export type PokemonElement =
+  | "풀"
+  | "독"
+  | "불꽃"
+  | "비행"
+  | "물"
+  | "벌레"
+  | "노말"
+  | "전기"
+  | "땅"
+  | "페어리"
+  | "격투"
+  | "에스퍼"
+  | "바위"
+  | "강철"
+  | "얼음"
+  | "고스트"
+  | "드래곤";
+
 interface PokemonData {
   id: number;
   name: string;
   image: string;
   height: number;
   weight: number;
-  types: string[];
+  types: PokemonElement[];
   abilities: string[];
   bookmark: boolean;
 }
