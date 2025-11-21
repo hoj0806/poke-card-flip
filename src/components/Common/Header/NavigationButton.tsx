@@ -1,4 +1,4 @@
-import { Link, NavLink } from "react-router";
+import { NavLink } from "react-router";
 
 export default function NavigationButton({
   text,
@@ -24,7 +24,6 @@ export default function NavigationButton({
             ? "bg-red-500 text-black"
             : "bg-green-500 text-white hover:bg-green-600 hover:text-black"
         }
-        
       `
       }
     >

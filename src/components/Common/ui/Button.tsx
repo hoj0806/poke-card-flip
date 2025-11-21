@@ -13,6 +13,7 @@ export default function Button({ text, linkTo, color = "sky" }: ButtonProps) {
     <Link
       to={linkTo}
       className={`
+        w-[350px]
         inline-block
         px-25
         py-4
