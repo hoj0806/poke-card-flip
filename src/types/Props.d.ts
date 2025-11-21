@@ -1,6 +1,9 @@
+type ButtonColor = "sky" | "green" | "red" | "yellow";
+
 interface ButtonProps {
   text: string;
   linkTo: string;
+  color: ButtonColor;
 }
 
 interface PokedexSortButtonProps {
