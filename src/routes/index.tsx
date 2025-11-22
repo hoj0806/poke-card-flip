@@ -9,6 +9,7 @@ import PokedexDetail from "./pages/PokedexDetail/PokedexDetail";
 
 import Pokedex from "./pages/Pokedex/PokedexWrapper";
 import HighScore from "./pages/highscore/HighScore";
+import NotFound from "./pages/NotFound/NotFound";
 
 const router = createBrowserRouter([
   {
@@ -49,7 +50,15 @@ const router = createBrowserRouter([
             path: ":difficulty",
             Component: Game,
           },
+          {
+            path: "*",
+            Component: NotFound,
+          },
         ],
+      },
+      {
+        path: "*",
+        Component: NotFound,
       },
     ],
   },
