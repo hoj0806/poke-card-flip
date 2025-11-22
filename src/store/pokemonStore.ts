@@ -120,7 +120,12 @@ export const usePokemonStore = create(
 
         switch (key) {
           case "id":
-            next = state.sortById === "asc" ? "desc" : "asc";
+            next =
+              state.sortBy !== "id"
+                ? "asc"
+                : state.sortById === "asc"
+                ? "desc"
+                : "asc";
             set((s) => {
               s.pokemons.sort((a, b) =>
                 next === "asc" ? a.id - b.id : b.id - a.id
@@ -131,7 +136,12 @@ export const usePokemonStore = create(
             break;
 
           case "name":
-            next = state.sortByName === "asc" ? "desc" : "asc";
+            next =
+              state.sortBy !== "name"
+                ? "asc"
+                : state.sortByName === "asc"
+                ? "desc"
+                : "asc";
             set((s) => {
               s.pokemons.sort((a, b) =>
                 next === "asc"
@@ -144,7 +154,12 @@ export const usePokemonStore = create(
             break;
 
           case "type":
-            next = state.sortByType === "asc" ? "desc" : "asc";
+            next =
+              state.sortBy !== "type"
+                ? "asc"
+                : state.sortByType === "asc"
+                ? "desc"
+                : "asc";
             set((s) => {
               s.pokemons.sort((a, b) => {
                 const aType = a.types[0] || "";
@@ -187,6 +202,10 @@ export const usePokemonStore = create(
       partialize: (state) => ({
         highScore: state.highScore,
         pokemons: state.pokemons,
+        sortBy: state.sortBy,
+        sortById: state.sortById,
+        sortByName: state.sortByName,
+        sortByType: state.sortByType,
       }),
     }
   )
