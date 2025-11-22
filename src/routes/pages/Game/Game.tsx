@@ -1,4 +1,4 @@
-import { Link, useParams } from "react-router";
+import { Link, useParams, useNavigate } from "react-router";
 import { usePokemonStore } from "../../../store/pokemonStore";
 import { useEffect, useState } from "react";
 import Card from "../../../components/Game/Card";
@@ -8,15 +8,17 @@ import Score from "../../../components/Game/Score";
 
 export default function Game() {
   const { difficulty } = useParams();
+  const navigate = useNavigate();
   const pokemons = usePokemonStore((state) => state.pokemons);
-  const [isInitialFlipping, setIsInitialFlipping] = useState(true);
+  const setHighScore = usePokemonStore((state) => state.setHighScore);
+  const highScoreStore = usePokemonStore((state) => state.highScore);
 
+  const [isInitialFlipping, setIsInitialFlipping] = useState(true);
   const [playerName, setPlayerName] = useState("");
   const [flippedCards, setFlippedCards] = useState<PokemonCard[]>([]);
   const [isGameOver, setIsGameOver] = useState(false);
   const [score, setScore] = useState(0);
   const [combo, setCombo] = useState(0);
-  const setHighScore = usePokemonStore((state) => state.setHighScore);
 
   const [pokemonCards, setPokemonCards] = useState<PokemonCard[]>(() => {
     if (!pokemons || pokemons.length === 0) return [];
@@ -59,7 +61,6 @@ export default function Game() {
       );
       setIsInitialFlipping(false);
     }, 2000);
-
     return () => clearTimeout(timer);
   }, [pokemonCards.length]);
 
@@ -89,7 +90,6 @@ export default function Game() {
         setCombo((c) => c + 1);
         setFlippedCards([]);
 
-        // 모든 카드가 맞았는지 확인
         const allCorrect = updatedCards.every(
           (card) =>
             card.isCorrect || card.id === card1.id || card.id === card2.id
@@ -111,6 +111,14 @@ export default function Game() {
     }
   };
 
+  const isVictory = pokemonCards.every((card) => card.isCorrect);
+  const currentHighScores =
+    highScoreStore[difficulty as "easy" | "normal" | "hard"] || [];
+  const lowestHighScore = currentHighScores.length
+    ? Math.min(...currentHighScores.map((h) => h.score))
+    : 0;
+  const isHighScore = score > lowestHighScore;
+
   return (
     <div className='relative'>
       <div className='flex flex-col gap-4 w-fit absolute top-10 left-10'>
@@ -123,7 +131,7 @@ export default function Game() {
       </div>
 
       <ProgressBarTimer
-        duration={60}
+        duration={3}
         onTimeout={() => setIsGameOver(true)}
         isGameOver={isGameOver}
       />
@@ -186,38 +194,48 @@ export default function Game() {
               exit={{ scale: 0.8 }}
               className='bg-white rounded-lg p-8 text-center shadow-lg'
             >
-              <h2 className='text-2xl font-bold mb-4'>게임 종료!</h2>
-              <p className='mb-4'>
-                모든 카드를 맞췄거나 시간이 종료되었습니다.
-              </p>
+              <h2 className='text-2xl font-bold mb-4'>
+                {isVictory ? "승리!" : "게임 종료!"}
+              </h2>
 
-              <div className='mb-4'>
-                <input
-                  type='text'
-                  placeholder='이름을 입력하세요'
-                  value={playerName}
-                  onChange={(e) => setPlayerName(e.target.value)}
-                  className='border border-gray-300 rounded px-2 py-1 w-full'
-                />
-              </div>
+              {isHighScore && (
+                <div className='mb-4'>
+                  <p className='text-red-500 font-bold mb-2'>
+                    하이스코어 달성!
+                  </p>
+                  <input
+                    type='text'
+                    maxLength={15}
+                    placeholder='이름을 입력하세요'
+                    value={playerName}
+                    onChange={(e) => setPlayerName(e.target.value)}
+                    className='border border-gray-300 rounded px-2 py-1 w-full'
+                  />
+                </div>
+              )}
 
               <button
                 onClick={() => {
-                  if (!playerName) return alert("이름을 입력해주세요!");
-                  if (difficulty) {
+                  if (isHighScore && !playerName)
+                    return alert("이름을 입력해주세요!");
+                  if (difficulty && isHighScore) {
                     setHighScore(
                       difficulty as "easy" | "normal" | "hard",
                       playerName,
                       score
                     );
                   }
+                  navigate("/");
                 }}
                 className='bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600'
               >
                 저장
               </button>
 
-              <Link to='/' className='text-blue-500 underline ml-4'>
+              <Link
+                to='/'
+                className='bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600'
+              >
                 메인으로
               </Link>
             </motion.div>
