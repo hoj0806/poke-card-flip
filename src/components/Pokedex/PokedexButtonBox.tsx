@@ -16,7 +16,7 @@ export default function PokedexButtonBox({
     <div className='flex gap-8 justify-between'>
       <PokedexSortButton
         onClick={() => sortToggle("id")}
-        selected={sortBy === "id" || sortBy === "none"}
+        selected={sortBy === "id"}
       >
         도감순 {sortById === "asc" ? "오름" : "내림"}
       </PokedexSortButton>
