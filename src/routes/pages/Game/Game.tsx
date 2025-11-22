@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Card from "../../../components/Game/Card";
 import ProgressBarTimer from "../../../components/Game/ProgressBarTimer";
 import { motion, AnimatePresence } from "framer-motion";
+import Score from "../../../components/Game/Score";
 
 export default function Game() {
   const { difficulty } = useParams();
@@ -117,22 +118,29 @@ export default function Game() {
 
   return (
     <div className='relative'>
-      <p>Score : {score}</p>
-      <p>Combo : {combo}</p>
+      <div className='flex flex-col gap-4 w-fit absolute top-10 left-10'>
+        <Score>
+          <p className='drop-shadow-[1px_1px_0px_#fff]'>SCORE : {score}</p>
+        </Score>
+        <Score>
+          <p className='drop-shadow-[1px_1px_0px_#fff]'>COMBO : {combo}</p>
+        </Score>
+      </div>
       <ProgressBarTimer
-        duration={60}
+        duration={1000}
         onTimeout={() => setIsGameOver(true)}
         isGameOver={isGameOver}
       />
       <div
         className={`
+
     grid
     justify-center 
     w-[620px]
     h-[620px]
     mx-auto
     my-auto
-    mt-14
+    mt-16
     gap-2
     ${difficulty === "hard" ? "w-[870px] h-[660px]" : ""}
     ${difficulty === "easy" ? "grid-cols-4" : ""}
