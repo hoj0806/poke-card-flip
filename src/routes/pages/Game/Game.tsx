@@ -9,8 +9,15 @@ import Score from "../../../components/Game/Score";
 export default function Game() {
   const { difficulty } = useParams();
   const pokemons = usePokemonStore((state) => state.pokemons);
+  const [isInitialFlipping, setIsInitialFlipping] = useState(true);
+
   const [playerName, setPlayerName] = useState("");
+  const [flippedCards, setFlippedCards] = useState<PokemonCard[]>([]);
+  const [isGameOver, setIsGameOver] = useState(false);
+  const [score, setScore] = useState(0);
+  const [combo, setCombo] = useState(0);
   const setHighScore = usePokemonStore((state) => state.setHighScore);
+
   const [pokemonCards, setPokemonCards] = useState<PokemonCard[]>(() => {
     if (!pokemons || pokemons.length === 0) return [];
 
@@ -46,73 +53,61 @@ export default function Game() {
 
   useEffect(() => {
     if (pokemonCards.length === 0) return;
-
     const timer = setTimeout(() => {
       setPokemonCards((prev) =>
         prev.map((card) => ({ ...card, isFlied: true }))
       );
+      setIsInitialFlipping(false);
     }, 2000);
 
-    return () => clearTimeout(timer); // cleanup
-  }, [pokemonCards]);
+    return () => clearTimeout(timer);
+  }, [pokemonCards.length]);
 
-  const [flippedCards, setFlippedCards] = useState<PokemonCard[]>([]);
-  const [isGameOver, setIsGameOver] = useState(false);
-  const [score, setScore] = useState(0);
-  const [combo, setCombo] = useState(0);
+  const handleFlip = (selectCard: PokemonCard) => {
+    if (isInitialFlipping) return;
+    if (!selectCard.isFlied || selectCard.isCorrect) return;
+    if (flippedCards.length >= 2) return;
 
-  const handleFlip = (card: PokemonCard) => {
-    if (isGameOver || flippedCards.length >= 2) return;
-    if (!card.isFlied || card.isCorrect) return;
-
-    // 카드 뒤집기
-    const updatedCards = pokemonCards.map((c) =>
-      c.id === card.id ? { ...c, isFlied: false } : c
+    const updatedCards = pokemonCards.map((card) =>
+      card.id === selectCard.id ? { ...card, isFlied: false } : card
     );
     setPokemonCards(updatedCards);
 
-    // 뒤집힌 카드 추적
-    const newFlipped = [...flippedCards, { ...card, isFlied: false }];
+    const newFlipped = [...flippedCards, { ...selectCard, isFlied: false }];
+    setFlippedCards(newFlipped);
 
     if (newFlipped.length === 2) {
-      const [first, second] = newFlipped;
+      const [card1, card2] = newFlipped;
 
-      setTimeout(() => {
-        const isMatch = first.name === second.name;
-
-        // 카드 상태 업데이트
+      if (card1.name === card2.name) {
         setPokemonCards((prev) =>
-          prev.map((c) => {
-            if (c.id === first.id || c.id === second.id) {
-              return isMatch
-                ? { ...c, isCorrect: true }
-                : { ...c, isFlied: true };
-            }
-            return c;
-          })
+          prev.map((card) =>
+            card.name === card1.name ? { ...card, isCorrect: true } : card
+          )
         );
+        setScore((s) => s + combo + 1);
+        setCombo((c) => c + 1);
+        setFlippedCards([]);
 
-        // 콤보 및 스코어
-        if (isMatch) {
-          const newCombo = combo + 1;
-          setCombo(newCombo);
-          setScore((prevScore) => prevScore + newCombo);
-        } else {
-          setCombo(0);
-        }
-
-        // 게임 종료 체크
-        const allCorrect = pokemonCards.every((c) =>
-          c.isCorrect || c.id === first.id || c.id === second.id
-            ? isMatch
-            : c.isCorrect
+        // 모든 카드가 맞았는지 확인
+        const allCorrect = updatedCards.every(
+          (card) =>
+            card.isCorrect || card.id === card1.id || card.id === card2.id
         );
         if (allCorrect) setIsGameOver(true);
-
-        setFlippedCards([]);
-      }, 500);
-    } else {
-      setFlippedCards(newFlipped);
+      } else {
+        setTimeout(() => {
+          setPokemonCards((prev) =>
+            prev.map((card) =>
+              card.id === card1.id || card.id === card2.id
+                ? { ...card, isFlied: true }
+                : card
+            )
+          );
+          setFlippedCards([]);
+        }, 500);
+        setCombo(0);
+      }
     }
   };
 
@@ -126,27 +121,22 @@ export default function Game() {
           <p className='drop-shadow-[1px_1px_0px_#fff]'>COMBO : {combo}</p>
         </Score>
       </div>
+
       <ProgressBarTimer
-        duration={1000}
+        duration={60}
         onTimeout={() => setIsGameOver(true)}
         isGameOver={isGameOver}
       />
+
       <div
         className={`
-
-    grid
-    justify-center 
-    w-[620px]
-    h-[620px]
-    mx-auto
-    my-auto
-    mt-16
-    gap-2
-    ${difficulty === "hard" ? "w-[870px] h-[660px]" : ""}
-    ${difficulty === "easy" ? "grid-cols-4" : ""}
-    ${difficulty === "normal" ? "grid-cols-5" : ""}
-    ${difficulty === "hard" ? "grid-cols-7" : ""}
-  `}
+        grid justify-center 
+        w-[620px] h-[620px] mx-auto my-auto mt-16 gap-2
+        ${difficulty === "hard" ? "w-[870px] h-[660px]" : ""}
+        ${difficulty === "easy" ? "grid-cols-4" : ""}
+        ${difficulty === "normal" ? "grid-cols-5" : ""}
+        ${difficulty === "hard" ? "grid-cols-7" : ""}
+      `}
       >
         {pokemonCards.map((card) => (
           <div key={card.id}>
@@ -182,7 +172,6 @@ export default function Game() {
         ))}
       </div>
 
-      {/* 게임 오버 팝업 */}
       <AnimatePresence>
         {isGameOver && (
           <motion.div
@@ -222,7 +211,6 @@ export default function Game() {
                       score
                     );
                   }
-                  // 팝업 닫거나 메인으로 이동
                 }}
                 className='bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600'
               >
