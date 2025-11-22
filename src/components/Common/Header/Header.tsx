@@ -8,6 +8,8 @@ export default function Header() {
         <NavigationButton text='메인' linkTo='/' />
         <NavigationButton text='도감' linkTo='/pokedex' />
         <NavigationButton text='게임' linkTo='/selectDifficulty' />
+        <NavigationButton text='하이 스코어' linkTo='/highscore' />
+
         <DarkModeToggle />
       </ul>
     </nav>

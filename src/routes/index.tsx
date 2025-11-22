@@ -8,6 +8,7 @@ import { pokemonLoader } from "./loader/PokemonLoader";
 import PokedexDetail from "./pages/PokedexDetail/PokedexDetail";
 
 import Pokedex from "./pages/Pokedex/PokedexWrapper";
+import HighScore from "./pages/highscore/HighScore";
 
 const router = createBrowserRouter([
   {
@@ -17,6 +18,10 @@ const router = createBrowserRouter([
       {
         path: "",
         Component: Home,
+      },
+      {
+        path: "highscore",
+        Component: HighScore,
       },
       {
         path: "pokedex",
