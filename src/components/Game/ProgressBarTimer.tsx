@@ -23,7 +23,7 @@ export default function ProgressBarTimer({
   }, [isGameOver, controls, duration, onTimeout]);
 
   return (
-    <div className='w-full flex justify-center'>
+    <div className='w-full flex justify-center mt-4'>
       <div className='w-full max-w-md h-4 bg-gray-300 rounded-full overflow-hidden'>
         <motion.div
           className='h-full bg-amber-400'
