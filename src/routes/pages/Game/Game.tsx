@@ -1,4 +1,4 @@
-import { Link, useParams, useNavigate } from "react-router";
+import { Link, useParams, useNavigate, Navigate } from "react-router";
 import { usePokemonStore } from "../../../store/pokemonStore";
 import { useEffect, useState } from "react";
 import Card from "../../../components/Game/Card";
@@ -118,6 +118,14 @@ export default function Game() {
     ? Math.min(...currentHighScores.map((h) => h.score))
     : 0;
   const isHighScore = score > lowestHighScore;
+
+  if (
+    difficulty !== "easy" &&
+    difficulty !== "normal" &&
+    difficulty !== "hard"
+  ) {
+    return <Navigate to='/404' replace />;
+  }
 
   return (
     <div className='relative'>

@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from "react-router";
+import { Navigate, useNavigate, useParams } from "react-router";
 import { usePokemonStore } from "../../../store/pokemonStore";
 import { getGradientByElement } from "../../../lib/utils";
 import type { PokemonElement } from "../../../types/Pokemon";
@@ -13,7 +13,10 @@ export default function PokedexDetail() {
   );
 
   const pokemon = pokemons.find((p) => p.id === Number(id));
-  if (!pokemon) return null;
+
+  if (!pokemon) {
+    return <Navigate to='/404' replace />;
+  }
 
   const height = (pokemon.height / 10).toFixed(1);
   const weight = (pokemon.weight / 10).toFixed(1);
