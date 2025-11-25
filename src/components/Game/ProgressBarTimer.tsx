@@ -7,19 +7,26 @@ export default function ProgressBarTimer({
   isGameOver = false,
 }: ProgressBarTimerProps) {
   const controls = useAnimation();
+
   useEffect(() => {
+    let timer: number;
+
     if (!isGameOver) {
-      controls
-        .start({
-          width: "0%",
-          transition: { duration, ease: "linear" },
-        })
-        .then(() => {
-          onTimeout?.();
-        });
+      timer = window.setTimeout(() => {
+        controls
+          .start({
+            width: "0%",
+            transition: { duration, ease: "linear" },
+          })
+          .then(() => {
+            onTimeout?.();
+          });
+      }, 2000);
     } else {
       controls.stop();
     }
+
+    return () => clearTimeout(timer);
   }, [isGameOver, controls, duration, onTimeout]);
 
   return (
