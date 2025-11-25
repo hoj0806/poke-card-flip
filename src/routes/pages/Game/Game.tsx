@@ -81,11 +81,13 @@ export default function Game() {
       const [card1, card2] = newFlipped;
 
       if (card1.name === card2.name) {
-        setPokemonCards((prev) =>
-          prev.map((card) =>
-            card.name === card1.name ? { ...card, isCorrect: true } : card
-          )
-        );
+        setTimeout(() => {
+          setPokemonCards((prev) =>
+            prev.map((card) =>
+              card.name === card1.name ? { ...card, isCorrect: true } : card
+            )
+          );
+        }, 400);
         setScore((s) => s + combo + 1);
         setCombo((c) => c + 1);
         setFlippedCards([]);
@@ -139,7 +141,7 @@ export default function Game() {
       </div>
 
       <ProgressBarTimer
-        duration={3}
+        duration={60}
         onTimeout={() => setIsGameOver(true)}
         isGameOver={isGameOver}
       />
@@ -148,10 +150,10 @@ export default function Game() {
         className={`
         grid justify-center 
         w-[620px] h-[620px] mx-auto my-auto mt-16 gap-2
-        ${difficulty === "hard" ? "w-[870px] h-[660px]" : ""}
-        ${difficulty === "easy" ? "grid-cols-4" : ""}
+        ${difficulty === "easy" ? "grid-cols-4 text-xl" : ""}
         ${difficulty === "normal" ? "grid-cols-5" : ""}
-        ${difficulty === "hard" ? "grid-cols-7" : ""}
+        ${difficulty === "hard" ? "w-[870px] h-[660px] grid-cols-7" : ""}
+     
       `}
       >
         {pokemonCards.map((card) => (
@@ -168,9 +170,7 @@ export default function Game() {
                     alt={card.name}
                     className='object-contain'
                   />
-                  <p className='text-[12px] md:text-sm lg:text-base text-center'>
-                    {card.name}
-                  </p>
+                  <p className='text-center'>{card.name}</p>
                 </div>
               }
               backContent={
@@ -194,21 +194,21 @@ export default function Game() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className='fixed inset-0 bg-black/50 flex items-center justify-center z-50'
+            className='fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4'
           >
             <motion.div
               initial={{ scale: 0.8 }}
               animate={{ scale: 1 }}
               exit={{ scale: 0.8 }}
-              className='bg-white rounded-lg p-8 text-center shadow-lg'
+              className='bg-white rounded-xl p-12 text-center shadow-xl max-w-lg w-full'
             >
-              <h2 className='text-2xl font-bold mb-4'>
+              <h2 className='text-3xl md:text-4xl font-bold mb-6'>
                 {isVictory ? "승리!" : "게임 종료!"}
               </h2>
 
               {isHighScore && (
-                <div className='mb-4'>
-                  <p className='text-red-500 font-bold mb-2'>
+                <div className='mb-6'>
+                  <p className='text-red-500 font-bold mb-3 text-2xl'>
                     하이스코어 달성!
                   </p>
                   <input
@@ -217,35 +217,34 @@ export default function Game() {
                     placeholder='이름을 입력하세요'
                     value={playerName}
                     onChange={(e) => setPlayerName(e.target.value)}
-                    className='border border-gray-300 rounded px-2 py-1 w-full'
+                    className='border border-gray-300 rounded px-3 py-2 w-full focus:outline-amber-300 text-lg'
                   />
                 </div>
               )}
 
-              <button
-                onClick={() => {
-                  if (isHighScore && !playerName)
-                    return alert("이름을 입력해주세요!");
-                  if (difficulty && isHighScore) {
-                    setHighScore(
-                      difficulty as "easy" | "normal" | "hard",
-                      playerName,
-                      score
-                    );
-                  }
-                  navigate("/");
-                }}
-                className='bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600'
-              >
-                저장
-              </button>
+              <div className='flex justify-center gap-4'>
+                <button
+                  onClick={() => {
+                    if (isHighScore && !playerName)
+                      return alert("이름을 입력해주세요!");
+                    if (difficulty && isHighScore) {
+                      setHighScore(
+                        difficulty as "easy" | "normal" | "hard",
+                        playerName,
+                        score
+                      );
+                    }
+                    navigate("/");
+                  }}
+                  className='bg-blue-500 text-white px-8 py-3 rounded-lg hover:bg-blue-600 text-lg'
+                >
+                  저장
+                </button>
 
-              <Link
-                to='/'
-                className='bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600'
-              >
-                메인으로
-              </Link>
+                <button className='bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 text-lg'>
+                  <Link to='/'>메인으로</Link>
+                </button>
+              </div>
             </motion.div>
           </motion.div>
         )}
