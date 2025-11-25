@@ -1,9 +1,8 @@
 import { cn, getGradientByElement } from "../../lib/utils";
-import type { PokemonElement } from "../../types/Pokemon";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function Card({
-  isFlied,
+  isFliped,
   isCorrect = false,
   onFlip,
   frontContent,
@@ -28,7 +27,7 @@ export default function Card({
           <div
             className={cn(
               "absolute inset-0 w-full h-full transition-transform duration-500 [transform-style:preserve-3d]",
-              !isFlied && "[transform:rotateY(180deg)]"
+              !isFliped && "[transform:rotateY(180deg)]"
             )}
           >
             {/* 뒤집힌 면 */}

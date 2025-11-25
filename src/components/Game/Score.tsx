@@ -1,6 +1,4 @@
-import type { ReactNode } from "react";
-
-export default function Score({ children }: { children: ReactNode }) {
+export default function Score({ text, content }: ScoreProps) {
   return (
     <div
       className='
@@ -15,7 +13,9 @@ export default function Score({ children }: { children: ReactNode }) {
         tracking-wider
       '
     >
-      {children}
+      <p className='drop-shadow-[1px_1px_0px_#fff]'>
+        {text} : {content}
+      </p>
     </div>
   );
 }

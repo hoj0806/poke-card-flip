@@ -1,6 +1,5 @@
 import { Link } from "react-router";
 import { motion } from "framer-motion";
-import type { PokemonData } from "../../types/Pokemon";
 
 export default function PokedexList({ name, image, id }: PokemonData) {
   return (

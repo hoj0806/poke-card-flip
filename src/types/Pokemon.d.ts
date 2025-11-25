@@ -24,7 +24,7 @@ interface PokemonAbility {
   slot: number;
 }
 
-export type PokemonElement =
+type PokemonElement =
   | "풀"
   | "독"
   | "불꽃"
@@ -42,7 +42,6 @@ export type PokemonElement =
   | "얼음"
   | "고스트"
   | "드래곤";
-
 interface PokemonData {
   id: number;
   name: string;

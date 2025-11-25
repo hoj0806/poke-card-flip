@@ -22,7 +22,7 @@ interface PokedexGridProps {
 }
 
 interface CardProps {
-  isFlied: boolean;
+  isFliped: boolean;
   isCorrect?: boolean;
   onFlip: () => void;
   frontContent: React.ReactNode;
@@ -35,4 +35,29 @@ interface ProgressBarTimerProps {
   duration?: number;
   onTimeout?: () => void;
   isGameOver?: boolean;
+}
+
+interface CardFrontProps {
+  image: string;
+  name: string;
+}
+
+interface GameOverModalProps {
+  isGameOver: boolean;
+  isVictory: boolean;
+  isHighScore: boolean;
+  playerName: string;
+  setPlayerName: (name: string) => void;
+  score: number;
+  onSave: () => void;
+}
+
+interface GameGridProps {
+  children: ReactNode;
+  difficulty: Difficulty;
+}
+
+interface ScoreProps {
+  text: string;
+  content: number;
 }

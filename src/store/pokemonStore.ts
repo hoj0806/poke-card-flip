@@ -8,11 +8,7 @@ export const usePokemonStore = create(
   persist(
     immer<PokemonStore>((set, get) => ({
       highScore: {
-        easy: [
-          { name: "테스트1", score: 3 },
-          { name: "테스트2", score: 2 },
-          { name: "테스트3", score: 1 },
-        ],
+        easy: [],
         normal: [
           { name: "테스트1", score: 3 },
           { name: "테스트2", score: 2 },
