@@ -11,12 +11,14 @@ import Pokedex from "./pages/Pokedex/PokedexWrapper";
 import HighScore from "./pages/highscore/HighScore";
 import NotFound from "./pages/NotFound/NotFound";
 import Loading from "../components/Common/ui/Loading";
+import Error from "../components/Common/ui/Error";
 
 const router = createBrowserRouter([
   {
     Component: Default,
     loader: pokemonLoader,
     HydrateFallback: Loading,
+    errorElement: <Error />,
     children: [
       { path: "", Component: Home },
       { path: "highscore", Component: HighScore },
