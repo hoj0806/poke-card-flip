@@ -2,7 +2,7 @@ interface PokemonCard {
   id: string;
   name: string;
   isCorrect: boolean;
-  isFlied: boolean;
+  isFliped: boolean;
   type: string;
   image: string;
 }

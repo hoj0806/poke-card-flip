@@ -1,5 +1,5 @@
 type Sort = "asc" | "desc";
-
+type Difficulty = "easy" | "normal" | "hard";
 interface ScoreRecord {
   name: string;
   score: number;
@@ -13,11 +13,7 @@ interface HighScore {
 
 interface PokemonStore {
   highScore: HighScore;
-  setHighScore: (
-    difficulty: "easy" | "normal" | "hard",
-    name: string,
-    score: number
-  ) => void;
+  setHighScore: (difficulty: Difficulty, name: string, score: number) => void;
 
   pokemons: PokemonData[];
   sortById: "asc" | "desc";

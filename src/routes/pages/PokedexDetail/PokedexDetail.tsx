@@ -1,9 +1,10 @@
 import { Navigate, useNavigate, useParams } from "react-router";
 import { usePokemonStore } from "../../../store/pokemonStore";
 import { getGradientByElement } from "../../../lib/utils";
-import type { PokemonElement } from "../../../types/Pokemon";
 import { Heart } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import AbilityBadge from "../../../components/Common/ui/AbilityBadge";
+import TypeBadge from "../../../components/Common/ui/TypeBadge";
 
 export default function PokedexDetail() {
   const { id } = useParams();
@@ -106,29 +107,14 @@ export default function PokedexDetail() {
             <div className='flex gap-2 flex-wrap mt-2'>
               <span>특성 :</span>
               {pokemon.abilities.map((ability: string) => (
-                <span
-                  key={ability}
-                  className='bg-yellow-500/30 px-2 py-1 rounded-md text-xs md:text-sm text-white'
-                >
-                  {ability}
-                </span>
+                <AbilityBadge key={ability} ability={ability} />
               ))}
             </div>
 
             <div className='flex gap-2 flex-wrap mt-2'>
               <span>타입 :</span>
               {pokemon.types.map((type: PokemonElement) => (
-                <span
-                  key={type}
-                  className={`
-                    px-2 py-1 rounded-md text-xs md:text-sm text-white
-                    bg-linear-to-br ${getGradientByElement(
-                      type as PokemonElement
-                    )}
-                  `}
-                >
-                  {type}
-                </span>
+                <TypeBadge type={type} key={type} />
               ))}
             </div>
           </div>

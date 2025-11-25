@@ -5,7 +5,7 @@ export default function HighScore() {
   const highScore = usePokemonStore((state) => state.highScore);
   const { easy, normal, hard } = highScore;
 
-  const [selected, setSelected] = useState<"easy" | "normal" | "hard">("easy");
+  const [selected, setSelected] = useState<Difficulty>("easy");
 
   const getScores = () => {
     switch (selected) {
@@ -27,10 +27,10 @@ export default function HighScore() {
       <h1 className='text-4xl font-bold mb-4'>하이 스코어</h1>
 
       <div className='flex gap-4'>
-        {["easy", "normal", "hard"].map((level) => (
+        {(["easy", "normal", "hard"] as Difficulty[]).map((level) => (
           <button
             key={level}
-            onClick={() => setSelected(level as "easy" | "normal" | "hard")}
+            onClick={() => setSelected(level)}
             className={`cursor-pointer
               px-6 py-2 rounded-lg font-bold transition
               capitalize
