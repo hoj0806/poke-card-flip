@@ -3,10 +3,7 @@ import { NavLink } from "react-router";
 export default function NavigationButton({
   text,
   linkTo,
-}: {
-  text: string;
-  linkTo: string;
-}) {
+}: NavigationButtonProps) {
   return (
     <NavLink
       to={linkTo}

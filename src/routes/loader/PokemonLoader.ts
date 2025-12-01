@@ -13,7 +13,6 @@ export const pokemonLoader = async () => {
     return store.pokemons;
   } catch (err: unknown) {
     if (err instanceof AxiosError) {
-      // Axios 에러라면 실제 status와 message를 그대로 전달
       const status = err.response?.status ?? 500;
       const message =
         err.response?.data?.message ?? err.message ?? "알 수 없는 오류";
@@ -23,7 +22,6 @@ export const pokemonLoader = async () => {
       });
     }
 
-    // 일반 에러
     const message =
       err instanceof Error
         ? err.message

@@ -1,133 +1,36 @@
 import { useParams, useNavigate, Navigate } from "react-router";
-import { usePokemonStore } from "../../../store/pokemonStore";
-import { useEffect, useState } from "react";
-import Card from "../../../components/Game/Card";
-import ProgressBarTimer from "../../../components/Game/ProgressBarTimer";
+import { useState } from "react";
 import { AnimatePresence } from "framer-motion";
+import Card from "../../../components/Game/Card";
+import CardFront from "../../../components/Game/CardFront";
+import CardBack from "../../../components/Game/CardBack";
+import GameGrid from "../../../components/Game/GameGrid";
+import ProgressBarTimer from "../../../components/Game/ProgressBarTimer";
 import Score from "../../../components/Game/Score";
 import GameOverModal from "../../../components/Game/GameOverModal";
-import GameGrid from "../../../components/Game/GameGrid";
-import CardBack from "../../../components/Game/CardBack";
-import CardFront from "../../../components/Game/CardFront";
+import { useGame } from "../../../hooks/useGame";
 
 export default function Game() {
-  const { difficulty } = useParams();
+  const { difficulty } = useParams<{ difficulty: Difficulty }>();
   const navigate = useNavigate();
-  const pokemons = usePokemonStore((state) => state.pokemons);
-  const setHighScore = usePokemonStore((state) => state.setHighScore);
-  const highScoreStore = usePokemonStore((state) => state.highScore);
 
-  const [isInitialFlipping, setIsInitialFlipping] = useState(true);
+  const {
+    pokemonCards,
+    isGameOver,
+    score,
+    combo,
+    isVictory,
+    isHighScore,
+    handleFlip,
+    setHighScore,
+    setIsGameOver,
+  } = useGame(difficulty as Difficulty);
+
   const [playerName, setPlayerName] = useState("");
-  const [flippedCards, setFlippedCards] = useState<PokemonCard[]>([]);
-  const [isGameOver, setIsGameOver] = useState(false);
-  const [score, setScore] = useState(0);
-  const [combo, setCombo] = useState(0);
-
-  const [pokemonCards, setPokemonCards] = useState<PokemonCard[]>(() => {
-    if (!pokemons || pokemons.length === 0) return [];
-
-    let cardCount = 6;
-    if (difficulty === "normal") cardCount = 10;
-    else if (difficulty === "hard") cardCount = 14;
-
-    const selectedPokemons = [...pokemons]
-      .sort(() => Math.random() - 0.5)
-      .slice(0, cardCount);
-
-    return selectedPokemons
-      .flatMap((p) => [
-        {
-          id: `${p.id}-1`,
-          name: p.name,
-          image: p.image,
-          isFliped: false,
-          isCorrect: false,
-          type: p.types[0],
-        },
-        {
-          id: `${p.id}-2`,
-          name: p.name,
-          image: p.image,
-          isFliped: false,
-          isCorrect: false,
-          type: p.types[0],
-        },
-      ])
-      .sort(() => Math.random() - 0.5);
-  });
-
-  useEffect(() => {
-    if (pokemonCards.length === 0) return;
-    const timer = setTimeout(() => {
-      setPokemonCards((prev) =>
-        prev.map((card) => ({ ...card, isFliped: true }))
-      );
-      setIsInitialFlipping(false);
-    }, 2000);
-    return () => clearTimeout(timer);
-  }, [pokemonCards.length]);
-
-  const handleFlip = (selectCard: PokemonCard) => {
-    if (isInitialFlipping) return;
-    if (!selectCard.isFliped || selectCard.isCorrect) return;
-    if (flippedCards.length >= 2) return;
-
-    const updatedCards = pokemonCards.map((card) =>
-      card.id === selectCard.id ? { ...card, isFliped: false } : card
-    );
-    setPokemonCards(updatedCards);
-
-    const newFlipped = [...flippedCards, { ...selectCard, isFliped: false }];
-    setFlippedCards(newFlipped);
-
-    if (newFlipped.length === 2) {
-      const [card1, card2] = newFlipped;
-
-      if (card1.name === card2.name) {
-        setTimeout(() => {
-          setPokemonCards((prev) =>
-            prev.map((card) =>
-              card.name === card1.name ? { ...card, isCorrect: true } : card
-            )
-          );
-        }, 400);
-        setScore((s) => s + combo + 1);
-        setCombo((c) => c + 1);
-        setFlippedCards([]);
-
-        const allCorrect = updatedCards.every(
-          (card) =>
-            card.isCorrect || card.id === card1.id || card.id === card2.id
-        );
-        if (allCorrect) setIsGameOver(true);
-      } else {
-        setTimeout(() => {
-          setPokemonCards((prev) =>
-            prev.map((card) =>
-              card.id === card1.id || card.id === card2.id
-                ? { ...card, isFliped: true }
-                : card
-            )
-          );
-          setFlippedCards([]);
-        }, 500);
-        setCombo(0);
-      }
-    }
-  };
-
-  const isVictory = pokemonCards.every((card) => card.isCorrect);
-  const currentHighScores = highScoreStore[difficulty as Difficulty] || [];
-  const lowestHighScore = currentHighScores.length
-    ? Math.min(...currentHighScores.map((h) => h.score))
-    : 0;
-  const isHighScore = score > lowestHighScore;
 
   if (
-    difficulty !== "easy" &&
-    difficulty !== "normal" &&
-    difficulty !== "hard"
+    !difficulty ||
+    !(["easy", "normal", "hard"] as Difficulty[]).includes(difficulty)
   ) {
     return <Navigate to='/404' replace />;
   }
@@ -144,6 +47,7 @@ export default function Game() {
         onTimeout={() => setIsGameOver(true)}
         isGameOver={isGameOver}
       />
+
       <GameGrid difficulty={difficulty}>
         {pokemonCards.map((card) => (
           <figure key={card.id}>

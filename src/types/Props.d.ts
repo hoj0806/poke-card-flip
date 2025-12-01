@@ -1,5 +1,4 @@
 type ButtonColor = "sky" | "green" | "red" | "yellow";
-
 interface ButtonProps {
   text: string;
   linkTo: string;
@@ -60,4 +59,9 @@ interface GameGridProps {
 interface ScoreProps {
   text: string;
   content: number;
+}
+
+interface NavigationButtonProps {
+  text: string;
+  linkTo: string;
 }

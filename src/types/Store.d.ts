@@ -1,5 +1,7 @@
 type Sort = "asc" | "desc";
 type Difficulty = "easy" | "normal" | "hard";
+type SortBy = "none" | "id" | "name" | "type";
+type ColorTheme = "light" | "dark" | "system";
 interface ScoreRecord {
   name: string;
   score: number;
@@ -16,17 +18,17 @@ interface PokemonStore {
   setHighScore: (difficulty: Difficulty, name: string, score: number) => void;
 
   pokemons: PokemonData[];
-  sortById: "asc" | "desc";
-  sortByName: "asc" | "desc";
-  sortByType: "asc" | "desc";
-  sortBy: "none" | "id" | "name" | "type";
+  sortById: Sort;
+  sortByName: Sort;
+  sortByType: Sort;
+  sortBy: SortBy;
 
   toggleBookMarkPokemon: (id: number) => void;
   fetchPokemonData: () => Promise<void>;
-  sortToggle: (key: "id" | "name" | "type") => void;
+  sortToggle: (key: Omit<SortBy, "none">) => void;
   sortReset: () => void;
 }
 interface ColorThemeStore {
-  colorTheme: "light" | "dark" | "system";
-  updateColorTheme: (theme: "light" | "dark" | "system") => void;
+  colorTheme: ColorTheme;
+  updateColorTheme: (theme: ColorTheme) => void;
 }
