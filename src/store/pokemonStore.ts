@@ -21,11 +21,7 @@ export const usePokemonStore = create(
         ],
       },
 
-      setHighScore: (
-        difficulty: "easy" | "normal" | "hard",
-        name: string,
-        score: number
-      ) => {
+      setHighScore: (difficulty: Difficulty, name: string, score: number) => {
         set((state) => {
           const currentScores = state.highScore[difficulty];
           const updatedScores = [...currentScores, { name, score }];
