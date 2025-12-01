@@ -146,7 +146,7 @@ export default function Game() {
       />
       <GameGrid difficulty={difficulty}>
         {pokemonCards.map((card) => (
-          <div key={card.id}>
+          <figure key={card.id}>
             <Card
               pokemonType={card.type}
               isFliped={card.isFliped}
@@ -155,7 +155,7 @@ export default function Game() {
               frontContent={<CardFront {...card} />}
               backContent={<CardBack />}
             />
-          </div>
+          </figure>
         ))}
       </GameGrid>
 
