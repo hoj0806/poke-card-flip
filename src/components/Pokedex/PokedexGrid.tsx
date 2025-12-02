@@ -10,8 +10,10 @@ export default function PokedexGrid({ showBookmarks }: PokedexGridProps) {
 
   if (displayedPokemons.length === 0 && showBookmarks)
     return (
-      <div className='flex justify-center items-center min-h-[550px] bg-amber-200'>
-        <p className='text-gray-700 text-lg'>북마크중인 포켓몬이 없습니다</p>
+      <div className='flex justify-center items-center min-h-[550px] bg-amber-200 dark:bg-[#555a56]'>
+        <p className='text-gray-700 text-lg dark:text-white'>
+          북마크중인 포켓몬이 없습니다
+        </p>
       </div>
     );
 

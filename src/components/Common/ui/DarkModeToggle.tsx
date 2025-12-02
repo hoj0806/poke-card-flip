@@ -50,6 +50,16 @@ export default function DarkModeToggle() {
     >
       <motion.div
         className='absolute top-1/2 w-10 h-10 -translate-y-1/2 rounded-full border-2 border-gray-800 bg-white flex items-center justify-center'
+        initial={{
+          x: (() => {
+            if (colorTheme === "system") {
+              return window.matchMedia("(prefers-color-scheme: dark)").matches
+                ? toggleWidth
+                : 0;
+            }
+            return colorTheme === "dark" ? toggleWidth : 0;
+          })(),
+        }}
         animate={{ x: isDark ? toggleWidth : 0 }}
         transition={{ type: "spring", stiffness: 300, damping: 22 }}
       >

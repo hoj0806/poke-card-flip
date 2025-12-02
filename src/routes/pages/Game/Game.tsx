@@ -27,7 +27,23 @@ export default function Game() {
   } = useGame(difficulty as Difficulty);
 
   const [playerName, setPlayerName] = useState("");
+  const [nameError, setNameError] = useState(false);
+  const handleChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setNameError(false);
+    setPlayerName(e.target.value);
+  };
 
+  const handleSave = () => {
+    if (isHighScore && playerName.trim() === "") {
+      setNameError(true);
+      return;
+    }
+
+    if (difficulty && isHighScore) {
+      setHighScore(difficulty as Difficulty, playerName.trim(), score);
+    }
+    navigate("/");
+  };
   if (
     !difficulty ||
     !(["easy", "normal", "hard"] as Difficulty[]).includes(difficulty)
@@ -43,7 +59,7 @@ export default function Game() {
       </div>
 
       <ProgressBarTimer
-        duration={60}
+        duration={10}
         onTimeout={() => setIsGameOver(true)}
         isGameOver={isGameOver}
       />
@@ -65,20 +81,14 @@ export default function Game() {
 
       <AnimatePresence>
         <GameOverModal
+          handleChangeInput={handleChangeInput}
           isGameOver={isGameOver}
           isVictory={isVictory}
           isHighScore={isHighScore}
           playerName={playerName}
-          setPlayerName={setPlayerName}
           score={score}
-          onSave={() => {
-            if (isHighScore && !playerName)
-              return alert("이름을 입력해주세요!");
-            if (difficulty && isHighScore) {
-              setHighScore(difficulty as Difficulty, playerName, score);
-            }
-            navigate("/");
-          }}
+          nameError={nameError}
+          onSave={handleSave}
         />
       </AnimatePresence>
     </div>

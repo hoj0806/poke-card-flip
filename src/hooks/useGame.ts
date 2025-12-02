@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { usePokemonStore } from "../store/pokemonStore";
+import { shuffleArray } from "../lib/utils";
 
 export function useGame(difficulty: Difficulty) {
   const pokemons = usePokemonStore((state) => state.pokemons);
@@ -17,8 +18,8 @@ export function useGame(difficulty: Difficulty) {
       .sort(() => Math.random() - 0.5)
       .slice(0, cardCount);
 
-    return selectedPokemons
-      .flatMap((p) => [
+    return shuffleArray(
+      selectedPokemons.flatMap((p) => [
         {
           id: `${p.id}-1`,
           name: p.name,
@@ -36,7 +37,7 @@ export function useGame(difficulty: Difficulty) {
           type: p.types[0],
         },
       ])
-      .sort(() => Math.random() - 0.5);
+    );
   });
 
   const [flippedCards, setFlippedCards] = useState<PokemonCard[]>([]);
@@ -107,10 +108,12 @@ export function useGame(difficulty: Difficulty) {
 
   const isVictory = pokemonCards.every((card) => card.isCorrect);
   const currentHighScores = highScoreStore[difficulty] || [];
-  const lowestHighScore = currentHighScores.length
-    ? Math.min(...currentHighScores.map((h) => h.score))
-    : 0;
-  const isHighScore = score > lowestHighScore;
+  const isHighScore =
+    score === 0
+      ? false
+      : currentHighScores.length < 3
+      ? true
+      : score > Math.min(...currentHighScores.map((h) => h.score));
 
   return {
     pokemonCards,
