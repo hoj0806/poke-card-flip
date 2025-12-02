@@ -6,19 +6,17 @@ import Game from "./pages/Game/Game";
 import GameDefault from "./layouts/GameDefault";
 import { pokemonLoader } from "./loader/PokemonLoader";
 import PokedexDetail from "./pages/PokedexDetail/PokedexDetail";
-
 import Pokedex from "./pages/Pokedex/PokedexWrapper";
 import HighScore from "./pages/highscore/HighScore";
 import NotFound from "./pages/NotFound/NotFound";
-import Loading from "../components/Common/ui/Loading";
-import Error from "../components/Common/ui/Error";
+import StatusScreen from "../components/Common/ui/StatusScreen";
 
 const router = createBrowserRouter([
   {
     Component: Default,
     loader: pokemonLoader,
-    HydrateFallback: Loading,
-    errorElement: <Error />,
+    HydrateFallback: StatusScreen,
+    errorElement: <StatusScreen type='error' />,
     children: [
       { path: "", Component: Home },
       { path: "highscore", Component: HighScore },

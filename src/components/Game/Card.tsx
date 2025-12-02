@@ -22,7 +22,13 @@ export default function Card({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.2 }}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          transition={{
+            duration: 0.2,
+            stiffness: 300,
+            damping: 15,
+          }}
         >
           <div
             className={cn(
@@ -30,11 +36,9 @@ export default function Card({
               !isFliped && "[transform:rotateY(180deg)]"
             )}
           >
-            {/* 뒤집힌 면 */}
             <div className='absolute inset-0 rounded-lg [backface-visibility:hidden] flex items-center justify-center border-2 border-black bg-cover bg-center'>
               {backContent}
             </div>
-            {/* 앞면 */}
             <div
               className={`absolute inset-0 rounded-lg [backface-visibility:hidden] [transform:rotateY(180deg)] flex flex-col items-center justify-center p-2 bg-linear-to-br ${getGradientByElement(
                 firstType

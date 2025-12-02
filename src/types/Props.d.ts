@@ -46,9 +46,10 @@ interface GameOverModalProps {
   isVictory: boolean;
   isHighScore: boolean;
   playerName: string;
-  setPlayerName: (name: string) => void;
   score: number;
+  nameError: boolean;
   onSave: () => void;
+  handleChangeInput: (e: ChangeEvent<HTMLInputElement>) => void;
 }
 
 interface GameGridProps {
@@ -64,4 +65,10 @@ interface ScoreProps {
 interface NavigationButtonProps {
   text: string;
   linkTo: string;
+}
+
+interface StatusScreenProps {
+  type?: "loading" | "error";
+  message?: string;
+  status?: number | null;
 }

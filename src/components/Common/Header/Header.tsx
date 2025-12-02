@@ -4,7 +4,7 @@ import NavigationButton from "./NavigationButton";
 export default function Header() {
   return (
     <header>
-      <nav className='bg-yellow-200 flex'>
+      <nav className='bg-yellow-200 flex dark:bg-[#555a56]'>
         <ul className='flex items-center justify-around my-3 w-full'>
           <li>
             <NavigationButton text='메인' linkTo='/' />

@@ -8,7 +8,7 @@ export default function PokedexSortButton({
       onClick={onClick}
       className={`
         relative px-4 py-3 rounded-lg font-semibold select-none
-        transition-all active:translate-y-1 cursor-pointer
+        transition-all active:translate-y-1 cursor-pointer hover:text-black
         ${
           selected
             ? "bg-red-500 text-black shadow-[0_6px_0_0_#b91c1c] active:shadow-[0_2px_0_0_#b91c1c]"

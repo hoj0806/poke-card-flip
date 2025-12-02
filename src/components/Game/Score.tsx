@@ -2,7 +2,9 @@ export default function Score({ text, content }: ScoreProps) {
   return (
     <div
       className='
-        bg-amber-500 
+        bg-amber-500
+        dark:text-white 
+        dark:bg-[#5e785d]
         w-[250px]
         border-4 border-black 
         rounded-lg 

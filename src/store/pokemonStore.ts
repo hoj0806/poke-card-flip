@@ -9,16 +9,8 @@ export const usePokemonStore = create(
     immer<PokemonStore>((set, get) => ({
       highScore: {
         easy: [],
-        normal: [
-          { name: "테스트1", score: 3 },
-          { name: "테스트2", score: 2 },
-          { name: "테스트3", score: 1 },
-        ],
-        hard: [
-          { name: "테스트1", score: 3 },
-          { name: "테스트2", score: 2 },
-          { name: "테스트3", score: 1 },
-        ],
+        normal: [],
+        hard: [],
       },
 
       setHighScore: (difficulty: Difficulty, name: string, score: number) => {

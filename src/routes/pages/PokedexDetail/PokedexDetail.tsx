@@ -47,7 +47,7 @@ export default function PokedexDetail() {
             relative
             bg-linear-to-br ${getGradientByElement(firstType)}
             shadow-lg shadow-black/30
-            border-2 border-transparent
+            border border-transparent
             transition-all duration-300
           `}
           onClick={(e) => e.stopPropagation()}
