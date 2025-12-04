@@ -11,7 +11,6 @@ export default function GameOverModal({
   onSave,
   handleChangeInput,
 }: GameOverModalProps) {
-  console.log(nameError);
   if (!isGameOver) return null;
 
   return (

@@ -59,7 +59,7 @@ export default function Game() {
       </div>
 
       <ProgressBarTimer
-        duration={10}
+        duration={60}
         onTimeout={() => setIsGameOver(true)}
         isGameOver={isGameOver}
       />
