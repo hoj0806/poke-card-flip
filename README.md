@@ -1,75 +1,57 @@
-# React + TypeScript + Vite
+# Pokemon Card Flip
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**포켓몬 카드 매칭 게임 + 도감(Pokedex)**
 
-Currently, two official plugins are available:
+Pokemon Card Flip은 동일한 포켓몬 카드를 매칭하는 메모리(카드 뒤집기) 방식의 게임입니다. 난이도별 게임 규칙(시간 제한, 점수/콤보 시스템)이 적용되며, 게임 기록과 도감의 북마크 정보는 전역 상태 관리 라이브러리인 **Zustand**로 관리합니다. 하이 스코어와 플레이 기록, 북마크는 브라우저의 `localStorage`에 저장되어 재접속 시에도 유지됩니다.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## React Compiler
+**배포 링크**
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+https://poke-card-flip.vercel.app/
 
-Note: This will impact Vite dev & build performances.
+---
 
-## Expanding the ESLint configuration
+## 주요 기능
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### 1. 카드 매칭 게임
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+* 카드를 뒤집어 동일한 포켓몬을 매칭
+* 난이도(📌 Easy / Normal / Hard)에 따라 카드장수 달라짐
+* 콤보 보너스 
+* 게임 결과(점수, 콤보, 시간 등)를 로컬에 저장하여 하이 스코어 기록
+* 게임 플레이 상태는 Zustand Store에서 관리
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+### 2. 도감 (Pokedex)
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+* 포켓몬 목록 및 상세 페이지 제공
+* 타입, 이름 등으로 정렬 기능
+* 북마크(즐겨찾기) 기능 — Store로 상태 공유
+* 북마크는 페이지 이동 및 새로고침 후에도 유지
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### 3. 다크 모드
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+* Tailwind CSS 기반
+* 다크/라이트 테마 선택을 Store에서 관리
+* 테마 변경 시 UI가 동적으로 반영됨
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+---
+
+## 기술 스택
+
+* **Framework**: React (+ Vite)
+* **Language**: TypeScript
+* **Styling**: Tailwind CSS
+* **State Management**: Zustand
+* **데이터 저장**: 브라우저 localStorage
+* **Design** : Figma
+* **배포** : Vercel
+  
+---
+
+
+
+
+
+
+
