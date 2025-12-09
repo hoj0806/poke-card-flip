@@ -49,8 +49,9 @@ https://poke-card-flip.vercel.app/
   
 ---
 
+## Sequence Diagram
 
-
+<img width="1280" height="992" alt="다운로드 (1)" src="https://github.com/user-attachments/assets/3743a60d-1040-46b1-9a88-e9c245de61ac" />
 
 
 
